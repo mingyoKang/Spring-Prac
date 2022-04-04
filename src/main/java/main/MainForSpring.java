@@ -8,6 +8,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import assembler.Assembler;
+import config.AppConf01;
+import config.AppConf02;
+import config.AppConfImport;
 import config.AppCtx;
 import spring.ChangePasswordService;
 import spring.DuplicateMemberException;
@@ -25,8 +28,12 @@ public class MainForSpring {
 
 	public static void main(String[] args) throws IOException {
 		
-		ctx = new AnnotationConfigApplicationContext(AppCtx.class);
+		// ctx = new AnnotationConfigApplicationContext(AppCtx.class);
 		
+		// AnnotationConfigApplicationContext의 생성자의 인자는 가변 인자이기 때문에
+		// 설정 클래스 목록을 콤마로 구분해서 전달하면 된다.
+		// ctx = new AnnotationConfigApplicationContext(AppConf01.class, AppConf02.class);
+		ctx = new AnnotationConfigApplicationContext(AppConfImport.class);
 		BufferedReader reader = 
 				new BufferedReader(new InputStreamReader(System.in));
 		
@@ -157,6 +164,15 @@ public class MainForSpring {
 		
 		MemberListPrinter memberListPrinter = 
 				ctx.getBean("memberListPrinter", MemberListPrinter.class);
+		
+		// getBean() 메소드의 첫 번째 인자는 빈의 이름이고 두 번째 인자는 빈의 타입이다.
+		// 존재하지 않는 빈의 이름을 사용하면 익셉션이 발생한다.
+		// 빈의 실제 타입과 getBean() 메소드에 지정한 타입이 다르면 익셉션에 실제 타입을 알려준다.
+		// MemberListPrinter memberListPrinter =
+		// ctx.getBean(MemberListPrinter.class); 처럼 빈 이름을 지정하지 않고도 타입만으로
+		// 빈을 구할 수도 있다.
+		// 같은 타입의 빈 객체가 두 개 이상 존재할 때는 해당 타입의 빈이 한 개가 아니라는 것을 알려주는
+		// 익셉션이 발생한다.
 		
 		memberListPrinter.printAll();
 		
